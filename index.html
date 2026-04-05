@@ -496,6 +496,44 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
   .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 }
+@media(max-width:768px){
+  /* Section එක දෙපැත්තට තෙරපෙන එක නවත්තන්න Padding අඩු කරනවා */
+  section, #research {
+    padding: 60px 20px !important; /* උඩ padding 60px කරලා දෙපැත්ත 20px කරනවා */
+    width: 100% !important;
+    overflow-x: hidden;
+  }
+
+  /* Paragraphs වල අකුරු හිරවෙන එක නවත්තන්න */
+  .about-text p, .contact-body, .research-body {
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left; /* අකුරු වමට ලස්සනට පෙළගස්වනවා */
+    width: 100% !important;
+  }
+
+  /* Cards (Projects/Stats) එක පේළියට එකක් එන විදියට හදනවා */
+  .about-grid, .contact-grid, .projects-grid, .research-intro, .insight-grid, .skills-grid {
+    grid-template-columns: 1fr !important; /* පේළියට එකක් විතරයි */
+    gap: 20px !important;
+  }
+
+  /* Project Cards වල පෙනුම හදනවා */
+  .project-card {
+    padding: 25px !important;
+    width: 100% !important;
+  }
+
+  /* Hero Section එකේ අකුරු ලොකු වැඩි නම් ඒකත් පොඩ්ඩක් අඩු කරනවා */
+  .hero-line {
+    font-size: 40px !important;
+  }
+  
+  #hero {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
 </style>
 </head>
 <body>
