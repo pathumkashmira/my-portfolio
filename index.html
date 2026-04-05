@@ -6,7 +6,7 @@
 <title>Pethum Kashmira — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=Noto+Sans+Sinhala:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
   --bg:#0a0a0b;--bg2:#111114;--bg3:#1a1a1e;
@@ -134,6 +134,43 @@ section{padding:120px 48px;max-width:1100px;margin:0 auto;}
 .badge-green{color:var(--accent2);border-color:rgba(143,190,171,0.25);background:rgba(143,190,171,0.06);}
 .badge-gold{color:var(--accent);border-color:rgba(200,184,138,0.25);background:rgba(200,184,138,0.06);}
 .badge-purple{color:var(--accent3);border-color:rgba(181,160,212,0.25);background:rgba(181,160,212,0.06);}
+
+
+/* subtitle */
+<section id="sub-translator">
+  <div class="section-header reveal">
+    <span class="section-number">08</span>
+    <h2 class="section-title">Sinhala Sub Maker</h2>
+    <div class="section-line"></div>
+  </div>
+  
+  <div class="report-card reveal" style="background: var(--bg2); padding: 40px; border: 1px solid var(--border);">
+    <div class="rc-eyebrow">AI Powered Tool · Fast Translation</div>
+    <h3 class="rc-title" style="font-size: 28px; margin-bottom: 15px;">English to <span>Sinhala</span> SRT Converter</h3>
+    <p class="about-text" style="color: var(--muted2); margin-bottom: 25px;">
+        Upload your English <strong>.srt</strong> file and get a translated Sinhala version instantly. 
+        Powered by Batch Processing for faster results.
+    </p>
+
+    <div style="margin-bottom: 20px;">
+        <input type="file" id="fileInput" accept=".srt" style="display: none;">
+        <label for="fileInput" class="btn-ghost" style="cursor: pointer; padding: 10px 20px; display: inline-block;">
+            📁 Select SRT File
+        </label>
+        <span id="fileName" style="margin-left: 15px; color: var(--accent); font-family: var(--mono); font-size: 12px;">No file chosen</span>
+    </div>
+
+    <button onclick="processSubtitle()" class="btn-primary mag" id="transBtn">Start Translation →</button>
+    
+    <div id="status" style="margin-top: 20px; font-family: var(--mono); font-size: 12px; color: var(--muted2);">
+        Ready to process...
+    </div>
+    
+    <div id="prog-wrap" style="width: 100%; height: 4px; background: var(--bg3); margin-top: 15px; display: none; border-radius: 2px; overflow: hidden;">
+        <div id="prog-bar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;"></div>
+    </div>
+  </div>
+</section>
 
 /* RESEARCH SECTION */
 #research{padding:120px 48px;max-width:1100px;margin:0 auto;}
@@ -413,21 +450,89 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
 
 /* RESPONSIVE */
 @media(max-width:768px){
-  body{cursor:auto;}
-  #cursor,#cursor-ring,#cursor-glow,#section-dots{display:none;}
-  nav{padding:16px 24px;}
-  .nav-links{display:none;}
-  #hero{padding-left:24px;padding-right:24px;}
-  section,#research{padding:80px 24px;}
-  .about-grid,.contact-grid,.projects-grid,.research-intro,.insight-grid{grid-template-columns:1fr;gap:40px;}
-  .skills-grid{grid-template-columns:1fr;}
-  .exp-item,.edu-item{grid-template-columns:1fr;gap:12px;}
-  .exp-meta,.edu-year{padding-right:0;}
-  footer{padding:32px 24px;flex-direction:column;gap:12px;text-align:center;}
-  .hero-scroll{display:none;}
-  #modal-drawer{height:96vh;}
-  .modal-pane .stat-grid,.modal-pane .scenario-grid,.modal-pane .risk-row,.modal-pane .lt-grid{grid-template-columns:1fr 1fr;}
-  .modal-pane .index-grid{grid-template-columns:1fr;}
+  /* Menu Button එක පෙන්වන්න */
+  .menu-toggle {
+    display: block;
+    cursor: pointer;
+    z-index: 1001;
+  }
+  .bar {
+    display: block;
+    width: 25px;
+    height: 2px;
+    margin: 5px auto;
+    background-color: var(--accent);
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Left Side Navigation Drawer */
+  .nav-links {
+    display: flex !important; /* display:none එක අයින් කරනවා */
+    position: fixed;
+    left: -100%; /* සාමාන්‍ය වෙලාවට වම් පැත්තේ හැංගිලා තියෙන්නේ */
+    top: 0;
+    flex-direction: column;
+    background-color: var(--bg2);
+    width: 250px;
+    height: 100vh;
+    padding-top: 80px;
+    transition: 0.4s cubic-bezier(.22,.61,.36,1);
+    box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    border-right: 1px solid var(--border);
+    z-index: 1000;
+  }
+
+  /* Menu එක Open වුණාම වමෙන් මැදට එනවා */
+  .nav-links.active {
+    left: 0;
+  }
+
+  .nav-links li {
+    margin: 15px 30px;
+  }
+
+  /* Hamburger එක 'X' එකක් වෙන Animation එක */
+  .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+  .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+@media(max-width:768px){
+  /* Section එක දෙපැත්තට තෙරපෙන එක නවත්තන්න Padding අඩු කරනවා */
+  section, #research {
+    padding: 60px 20px !important; /* උඩ padding 60px කරලා දෙපැත්ත 20px කරනවා */
+    width: 100% !important;
+    overflow-x: hidden;
+  }
+
+  /* Paragraphs වල අකුරු හිරවෙන එක නවත්තන්න */
+  .about-text p, .contact-body, .research-body {
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left; /* අකුරු වමට ලස්සනට පෙළගස්වනවා */
+    width: 100% !important;
+  }
+
+  /* Cards (Projects/Stats) එක පේළියට එකක් එන විදියට හදනවා */
+  .about-grid, .contact-grid, .projects-grid, .research-intro, .insight-grid, .skills-grid {
+    grid-template-columns: 1fr !important; /* පේළියට එකක් විතරයි */
+    gap: 20px !important;
+  }
+
+  /* Project Cards වල පෙනුම හදනවා */
+  .project-card {
+    padding: 25px !important;
+    width: 100% !important;
+  }
+
+  /* Hero Section එකේ අකුරු ලොකු වැඩි නම් ඒකත් පොඩ්ඩක් අඩු කරනවා */
+  .hero-line {
+    font-size: 40px !important;
+  }
+  
+  #hero {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
 }
 </style>
 </head>
@@ -447,7 +552,6 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
   <div class="sdot" data-s="projects"></div>
   <div class="sdot" data-s="research"></div>
   <div class="sdot" data-s="education"></div>
-  <div class="sdot" data-s="translator"></div>
   <div class="sdot" data-s="contact"></div>
 </div>
 
@@ -706,14 +810,19 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
 
 <nav id="nav">
   <a href="#hero" class="nav-logo">PK</a>
-  <ul class="nav-links">
+  <div class="menu-toggle" id="mobile-menu-btn" onclick="toggleMenu()">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </div>
+  <ul class="nav-links" id="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#sub-translator">Sub Maker</a></li>
     <li><a href="#research">Research</a></li>
     <li><a href="#education">Education</a></li>
-    <li><a href="#translator">Translator</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -871,6 +980,61 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
     <div class="project-card reveal d3 tilt"><div class="project-num">03</div><div class="project-title">Web3 Community Building</div><div class="project-desc">Established and scaled Movement Labs community with airdrop strategies, generating $1,000+ in ecosystem rewards for global participants.</div><div class="tech-stack"><span class="tech">Community</span><span class="tech">Web3</span><span class="tech">Airdrop Strategy</span></div></div>
     <div class="project-card reveal d4 tilt"><div class="project-num">04</div><div class="project-title">Freelance Design Studio</div><div class="project-desc">3+ years of creative services on Fiverr — CV templates, branding, business cards, and illustration — serving global clients at Level 2 Seller.</div><div class="tech-stack"><span class="tech">CorelDRAW</span><span class="tech">Adobe Illustrator</span><span class="tech">MS Office</span></div></div>
   </div>
+
+  <div class="project-card reveal d1 tilt">
+  <span class="project-status status-live">Live Tool</span>
+  <div class="project-num">05</div>
+  <div class="project-title">AI Sinhala Sub Maker</div>
+  <div class="project-desc">
+    A high-speed SRT subtitle translator using Google's Neural Machine Translation. 
+    Supports large files (2000+ lines) with automated batch processing.
+  </div>
+  <div class="tech-stack">
+    <span class="tech">JavaScript (ES6)</span>
+    <span class="tech">Google API</span>
+    <span class="tech">File System</span>
+  </div>
+  <div style="margin-top: 20px;">
+    <a href="#sub-translator" class="btn-read mag" style="text-decoration: none; display: inline-block;">
+      Try Tool Now →
+    </a>
+  </div>
+</div>
+
+</section>
+
+<section id="sub-translator">
+  <div class="section-header reveal">
+    <span class="section-number">08</span>
+    <h2 class="section-title">Sub Maker</h2>
+    <div class="section-line"></div>
+  </div>
+  
+  <div class="report-card reveal" style="background: var(--bg2); padding: 40px; border: 1px solid var(--border); border-radius: 4px;">
+    <div class="rc-eyebrow">AI Powered · SRT Converter</div>
+    <h3 class="rc-title" style="font-size: 28px; margin-bottom: 15px;">English to <span>Sinhala</span></h3>
+    <p class="about-text" style="color: var(--muted2); margin-bottom: 25px; font-size: 14px;">
+        Upload your English <strong>.srt</strong> file and get a translated Sinhala version instantly.
+    </p>
+
+    <div style="margin-bottom: 25px;">
+        <input type="file" id="fileInput" accept=".srt" style="display: none;">
+        <label for="fileInput" class="btn-ghost mag" style="cursor: pointer; padding: 10px 20px; display: inline-block; border: 1px solid var(--border);">
+            📁 Select SRT File
+        </label>
+        <div id="fileName" style="margin-top: 10px; color: var(--accent); font-family: var(--mono); font-size: 11px;">No file selected</div>
+    </div>
+
+    <button onclick="processSubtitle()" class="btn-primary mag" id="transBtn">Start Translation →</button>
+    
+    <div id="status" style="margin-top: 20px; font-family: var(--mono); font-size: 11px; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px;">
+        System Ready...
+    </div>
+    
+    <div id="prog-wrap" style="width: 100%; height: 2px; background: var(--bg3); margin-top: 15px; display: none; border-radius: 2px; overflow: hidden;">
+        <div id="prog-bar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;"></div>
+    </div>
+  </div>
 </section>
 
 <!-- RESEARCH -->
@@ -953,265 +1117,10 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
   </div>
 </section>
 
-<!-- TRANSLATOR -->
-<section id="translator">
-  <div class="section-header reveal">
-    <span class="section-number">08</span>
-    <h2 class="section-title">Sinhala Subtitle Translator</h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="reveal" style="margin-bottom:40px;">
-    <p style="color:var(--muted2);font-weight:300;max-width:560px;line-height:1.85;">
-      Upload any English <strong style="color:var(--text);font-weight:400;">.srt</strong> subtitle file and get an accurate, natural-sounding Sinhala translation — powered by Claude AI. Built for Sri Lankan audiences.
-    </p>
-  </div>
-
-  <!-- API Key -->
-  <div class="reveal" style="margin-bottom:24px;">
-    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
-      <input id="sst-key" type="password" placeholder="Paste your Anthropic API key — sk-ant-..."
-        style="flex:1;min-width:260px;padding:11px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:2px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .2s;"
-        onfocus="this.style.borderColor='rgba(200,184,138,0.5)'" onblur="this.style.borderColor='var(--border)'"/>
-    </div>
-    <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;letter-spacing:.04em;">
-      Get a free key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(200,184,138,0.3);">console.anthropic.com</a>
-      &nbsp;·&nbsp; Key never saved — only sent directly to Anthropic
-    </p>
-  </div>
-
-  <!-- Drop Zone -->
-  <div id="sst-idle" class="reveal">
-    <div id="sst-dropzone"
-      style="border:1px dashed var(--border-h);padding:56px 40px;text-align:center;cursor:pointer;transition:border-color .3s,background .3s;background:var(--bg2);border-radius:2px;"
-      onclick="document.getElementById('sst-file').click()"
-      ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--bg3)'"
-      ondragleave="this.style.borderColor='var(--border-h)';this.style.background='var(--bg2)'"
-      ondrop="event.preventDefault();this.style.borderColor='var(--border-h)';this.style.background='var(--bg2)';sstHandleFile(event.dataTransfer.files[0])">
-      <input type="file" id="sst-file" accept=".srt,.txt" style="display:none" onchange="sstHandleFile(this.files[0])"/>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;">Upload Subtitle File</div>
-      <div style="font-size:14px;color:var(--muted2);font-weight:300;">Drag &amp; drop your .srt file here, or <span style="color:var(--accent);border-bottom:1px solid rgba(200,184,138,0.4);cursor:pointer;">browse</span></div>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;letter-spacing:.04em;">Standard .srt subtitle format</div>
-    </div>
-  </div>
-
-  <!-- Ready -->
-  <div id="sst-ready" style="display:none;">
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;">
-      <span style="font-family:var(--mono);font-size:11px;color:var(--accent2);border:1px solid rgba(143,190,171,0.25);padding:4px 12px;border-radius:2px;" id="sst-fname">—</span>
-      <span style="font-family:var(--mono);font-size:11px;color:var(--muted);" id="sst-fcount">0 subtitles</span>
-    </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <button class="btn-primary mag" onclick="sstStart()" id="sst-startbtn" style="font-size:12px;">✦ Translate to Sinhala</button>
-      <button onclick="sstReset()" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);background:none;border:1px solid var(--border);padding:11px 20px;border-radius:2px;cursor:pointer;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--text)';this.style.borderColor='var(--border-h)'" onmouseout="this.style.color='var(--muted2)';this.style.borderColor='var(--border)'">Change File</button>
-    </div>
-  </div>
-
-  <!-- Translating -->
-  <div id="sst-translating" style="display:none;">
-    <div style="font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;">Translating <span id="sst-tname"></span></div>
-    <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-      <span style="font-family:var(--mono);font-size:11px;color:var(--muted);" id="sst-tmsg">Preparing…</span>
-      <span style="font-family:var(--mono);font-size:11px;color:var(--accent);" id="sst-tpct">0%</span>
-    </div>
-    <div style="height:2px;background:var(--border);border-radius:1px;overflow:hidden;margin-bottom:24px;">
-      <div id="sst-tbar" style="height:100%;width:0%;background:linear-gradient(to right,var(--accent),var(--accent2));transition:width .4s cubic-bezier(.22,.61,.36,1);"></div>
-    </div>
-    <!-- Live preview -->
-    <div id="sst-livepreview" style="display:none;border:1px solid var(--border);background:var(--bg2);">
-      <div style="display:grid;grid-template-columns:32px 1fr 1fr;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;">
-        <span>#</span><span>English</span><span>සිංහල</span>
-      </div>
-      <div id="sst-livebody" style="max-height:240px;overflow-y:auto;"></div>
-    </div>
-  </div>
-
-  <!-- Done -->
-  <div id="sst-done" style="display:none;">
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;">
-      <span style="font-family:var(--mono);font-size:11px;color:var(--accent2);border:1px solid rgba(143,190,171,0.25);padding:4px 12px;border-radius:2px;">✓ Done — <span id="sst-dcount">0</span> subtitles translated</span>
-    </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px;">
-      <button class="btn-primary mag" onclick="sstDownload()" id="sst-dlbtn" style="font-size:12px;">↓ Download Sinhala .srt</button>
-      <button onclick="sstReset()" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);background:none;border:1px solid var(--border);padding:11px 20px;border-radius:2px;cursor:pointer;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted2)'">Translate Another</button>
-    </div>
-    <div style="border:1px solid var(--border);background:var(--bg2);">
-      <div style="display:grid;grid-template-columns:32px 1fr 1fr;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;">
-        <span>#</span><span>English</span><span>සිංහල</span>
-      </div>
-      <div id="sst-donebody" style="max-height:320px;overflow-y:auto;"></div>
-    </div>
-  </div>
-
-</section>
-
-<script>
-(function(){
-  var blocks=[],trans=[],fname='subtitles';
-  var BATCH=25; // 25 per batch = faster
-
-  function parseSRT(t){
-    var out=[],parts=t.trim().split(/\n\s*\n/);
-    for(var i=0;i<parts.length;i++){
-      var lines=parts[i].trim().split('\n');
-      if(lines.length<3)continue;
-      var timing=lines[1].trim();
-      if(!timing.includes('-->'))continue;
-      out.push({idx:lines[0].trim(),timing:timing,text:lines.slice(2).join('\n')});
-    }
-    return out;
-  }
-
-  function show(id){
-    ['sst-idle','sst-ready','sst-translating','sst-done'].forEach(function(s){
-      document.getElementById(s).style.display=(s===id)?'':'none';
-    });
-  }
-
-  window.sstHandleFile=function(file){
-    if(!file)return;
-    fname=file.name.replace(/\.(srt|txt)$/i,'');
-    var r=new FileReader();
-    r.onload=function(e){
-      blocks=parseSRT(e.target.result);
-      if(!blocks.length){alert('Could not read SRT file. Check the format.');return;}
-      trans=[];
-      document.getElementById('sst-fname').textContent=file.name;
-      document.getElementById('sst-fcount').textContent=blocks.length+' subtitles';
-      show('sst-ready');
-    };
-    r.readAsText(file);
-  };
-
-  window.sstStart=async function(){
-    var key=document.getElementById('sst-key').value.trim();
-    if(!key){alert('Please enter your Anthropic API key first!');return;}
-    document.getElementById('sst-startbtn').disabled=true;
-    document.getElementById('sst-tname').textContent=fname;
-    show('sst-translating');
-    trans=new Array(blocks.length).fill(null);
-
-    // Build batches
-    var batches=[];
-    for(var i=0;i<blocks.length;i+=BATCH){
-      var batch=[];
-      for(var j=0;j<BATCH&&(i+j)<blocks.length;j++)batch.push({gi:i+j,text:blocks[i+j].text});
-      batches.push(batch);
-    }
-
-    var done=0;
-    for(var bi=0;bi<batches.length;bi++){
-      var batch=batches[bi];
-      document.getElementById('sst-tmsg').textContent='Translating batch '+(bi+1)+' of '+batches.length+'…';
-
-      var sys='You are an expert Sinhala (සිංහල) translator specialising in movie and TV subtitles.\nRules:\n- Use natural, colloquial Sinhala that sounds completely native to Sri Lankan audiences\n- Match the emotional tone, urgency, and mood of each line exactly\n- Keep subtitle length screen-appropriate — concise but complete\n- Use correct Sinhala grammar and authentic everyday vocabulary\n- Preserve character names, place names, brand names, and technical terms unchanged\n- Translate idioms and slang into equivalent natural Sinhala expressions — never word-for-word\n- For exclamations, questions, and emotional outbursts, match the energy in Sinhala\nReturn ONLY a valid JSON array of strings, one translation per input, same order. No markdown, no explanation, no extra text.';
-
-      try{
-        var res=await fetch('https://api.anthropic.com/v1/messages',{
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'x-api-key':key,
-            'anthropic-version':'2023-06-01',
-            'anthropic-dangerous-direct-browser-access':'true'
-          },
-          body:JSON.stringify({
-            model:'claude-sonnet-4-20250514',
-            max_tokens:2000,
-            system:sys,
-            messages:[{role:'user',content:'Translate to Sinhala:\n'+JSON.stringify(batch.map(function(b){return b.text;}))}]
-          })
-        });
-        var data=await res.json();
-        if(data.error)throw new Error(data.error.message);
-        var raw=data.content.map(function(c){return c.text||'';}).join('').trim();
-        var clean=raw.replace(/```json|```/g,'').trim();
-        var result=JSON.parse(clean);
-        batch.forEach(function(b,j){trans[b.gi]=result[j]||b.text;});
-      }catch(err){
-        batch.forEach(function(b){trans[b.gi]=b.text;});
-        console.error('Batch error:',err);
-      }
-
-      done+=batch.length;
-      var pct=Math.round((done/blocks.length)*100);
-      document.getElementById('sst-tbar').style.width=pct+'%';
-      document.getElementById('sst-tpct').textContent=pct+'%';
-      sstUpdateLive();
-    }
-
-    sstShowDone();
-  };
-
-  function sstUpdateLive(){
-    var filled=trans.filter(Boolean).length;
-    if(!filled)return;
-    var box=document.getElementById('sst-livepreview');
-    var body=document.getElementById('sst-livebody');
-    box.style.display='';
-    body.innerHTML='';
-    var lim=Math.min(filled,20);
-    for(var i=0;i<lim;i++){
-      if(!trans[i])continue;
-      var row=document.createElement('div');
-      row.style.cssText='display:grid;grid-template-columns:32px 1fr 1fr;gap:12px;padding:9px 16px;border-bottom:1px solid var(--border);';
-      row.innerHTML='<span style="font-family:var(--mono);font-size:10px;color:var(--muted);padding-top:2px;">'+blocks[i].idx+'</span>'
-        +'<span style="font-size:12px;color:var(--muted2);line-height:1.5;">'+blocks[i].text.replace(/\n/g,'<br>')+'</span>'
-        +'<span style="font-size:12px;color:var(--text);line-height:1.6;font-family:\'Noto Sans Sinhala\',var(--sans);">'+trans[i].replace(/\n/g,'<br>')+'</span>';
-      body.appendChild(row);
-    }
-    body.scrollTop=body.scrollHeight;
-  }
-
-  function sstShowDone(){
-    document.getElementById('sst-dcount').textContent=blocks.length;
-    document.getElementById('sst-dlbtn').textContent='↓ Download '+fname+'_sinhala.srt';
-    var body=document.getElementById('sst-donebody');
-    body.innerHTML='';
-    var lim=Math.min(blocks.length,80);
-    for(var i=0;i<lim;i++){
-      var row=document.createElement('div');
-      row.style.cssText='display:grid;grid-template-columns:32px 1fr 1fr;gap:12px;padding:9px 16px;border-bottom:1px solid var(--border);transition:background .15s;';
-      row.onmouseover=function(){this.style.background='var(--bg3)';};
-      row.onmouseout=function(){this.style.background='';};
-      row.innerHTML='<span style="font-family:var(--mono);font-size:10px;color:var(--muted);padding-top:2px;">'+blocks[i].idx+'</span>'
-        +'<span style="font-size:12px;color:var(--muted2);line-height:1.5;">'+blocks[i].text.replace(/\n/g,'<br>')+'</span>'
-        +'<span style="font-size:12px;color:var(--text);line-height:1.6;font-family:\'Noto Sans Sinhala\',var(--sans);">'+( trans[i]||'—').replace(/\n/g,'<br>')+'</span>';
-      body.appendChild(row);
-    }
-    if(blocks.length>80){
-      var note=document.createElement('div');
-      note.style.cssText='padding:10px 16px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em;';
-      note.textContent='+ '+(blocks.length-80)+' more in downloaded file';
-      body.appendChild(note);
-    }
-    show('sst-done');
-  }
-
-  window.sstDownload=function(){
-    var lines=blocks.map(function(b,i){return b.idx+'\n'+b.timing+'\n'+(trans[i]||b.text);});
-    var blob=new Blob([lines.join('\n\n')],{type:'text/plain;charset=utf-8'});
-    var a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download=fname+'_sinhala.srt';
-    a.click();
-  };
-
-  window.sstReset=function(){
-    blocks=[];trans=[];
-    document.getElementById('sst-file').value='';
-    document.getElementById('sst-startbtn').disabled=false;
-    document.getElementById('sst-livepreview').style.display='none';
-    document.getElementById('sst-livebody').innerHTML='';
-    show('sst-idle');
-  };
-})();
-</script>
-
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-header reveal">
-    <span class="section-number">09</span>
+    <span class="section-number">07</span>
     <h2 class="section-title">Contact</h2>
     <div class="section-line"></div>
   </div>
@@ -1219,10 +1128,10 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
     <div class="reveal-l">
       <div class="contact-tagline">Open to<br/><em>opportunities &amp;</em><br/>collaborations</div>
       <p class="contact-body">Actively seeking internships, freelance projects, and networking opportunities in agribusiness, finance, market research, and digital innovation. Let's connect.</p>
-      <a href="/cdn-cgi/l/email-protection#d3a3b6a7bba6beb8b2a0bbbebaa1b293b4beb2babffdb0bcbe" class="btn-primary mag" style="display:inline-block">Send an Email →</a>
+      <a href="mailto:pethumkashmira@gmail.com" class="btn-primary mag" style="display:inline-block">Send an Email →</a>
     </div>
     <div class="contact-links reveal-r">
-      <a href="/cdn-cgi/l/email-protection#126277667a677f7973617a7f7b607352757f737b7e3c717d7f" class="contact-link"><div class="contact-link-left"><div class="contact-link-icon">✉</div><span class="contact-link-label">Email</span></div><span class="contact-link-value"><span class="__cf_email__" data-cfemail="1a6a7f6e726f77717b69727773687b5a7d777b737634797577">[email&#160;protected]</span></span><span class="contact-arrow">→</span></a>
+      <a href="mailto:pethumkashmira@gmail.com" class="contact-link"><div class="contact-link-left"><div class="contact-link-icon">✉</div><span class="contact-link-label">Email</span></div><span class="contact-link-value">pethumkashmira@gmail.com</span><span class="contact-arrow">→</span></a>
       <a href="tel:+94769667684" class="contact-link"><div class="contact-link-left"><div class="contact-link-icon">☎</div><span class="contact-link-label">Phone</span></div><span class="contact-link-value">+94 76 966 7684</span><span class="contact-arrow">→</span></a>
       <a href="https://www.linkedin.com/in/pethum-kashmira" target="_blank" class="contact-link"><div class="contact-link-left"><div class="contact-link-icon">in</div><span class="contact-link-label">LinkedIn</span></div><span class="contact-link-value">/in/pethum-kashmira</span><span class="contact-arrow">→</span></a>
       <a href="https://pethumkashmira.site" target="_blank" class="contact-link"><div class="contact-link-left"><div class="contact-link-icon">⌘</div><span class="contact-link-label">Website</span></div><span class="contact-link-value">pethumkashmira.site</span><span class="contact-arrow">→</span></a>
@@ -1238,7 +1147,7 @@ footer{border-top:1px solid var(--border);padding:40px 80px;display:flex;justify
 
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 /* CURSOR */
 const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring'),glow=document.getElementById('cursor-glow');
@@ -1269,7 +1178,7 @@ const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
 
 /* SECTION DOTS */
-const secs=['hero','about','skills','experience','projects','research','education','translator','contact'];
+const secs=['hero','about','skills','experience','projects','research','education','contact'];
 const dots=document.querySelectorAll('.sdot');
 dots.forEach(d=>d.addEventListener('click',()=>document.getElementById(d.dataset.s).scrollIntoView({behavior:'smooth'})));
 function updDots(){let cur='hero';secs.forEach(id=>{const el=document.getElementById(id);if(el&&scrollY>=el.offsetTop-320)cur=id;});dots.forEach(d=>d.classList.toggle('on',d.dataset.s===cur));}
@@ -1349,8 +1258,107 @@ function initCharts(){
 
   new Chart(document.getElementById('mc-chart2'),{type:'bar',data:{labels:['January','February','March'],datasets:[{label:'NDX 2026',data:[1.8,-2.3,-3.2],backgroundColor:'rgba(248,113,113,0.7)',borderRadius:3,borderSkipped:false},{label:'NDX 2025',data:[3.1,4.2,5.8],backgroundColor:'rgba(74,222,128,0.7)',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc,font:{size:10},boxWidth:8,boxHeight:8}}},scales:{x:{ticks:{color:tc,font:{size:10}},grid:{color:'transparent'}},y:{ticks:{color:tc,font:{size:10},callback:v=>v+'%'},grid:{color:gc}}}}});
 
-  new Chart(document.getElementById('mc-chart3'),{type:'line',data:{labels:['Q1 2026','Q2 2026','Q3 2026','Q4 2026','Q1 2027','Q3 2027','Q4 2027','Q2 2028','Q4 2028','Q4 2029','Q4 2030'],datasets:[{label:'Base Case (NDX)',data:[24068,25575,27500,28944,34615,38243,35766,38000,40384,54871,57902],borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#3b82f6'},{label:'Bear Case',data:[24068,21000,19500,18500,20000,22000,24000,26000,28000,32000,36000],borderColor:'#f87171',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,4],fill:false,tension:.3,pointRadius:2,pointBackgroundColor:'#f87171'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc,font:{size:10},boxWidth:8,boxHeight:8}}},scales:{x:{ticks:{color:tc,font:{size:10}},grid:{color:'transparent'}},y:{ticks:{color:tc,font:{size:10},callback:v=>v.toLocaleString()},grid:{color:gc}}}}});
+  new Chart(document.getElementById('mc-chart3'),{type:'line',data:{labels:['Q1 2026','Q2 2026','Q3 2026','Q4 2026','Q1 2027','Q3 2027','Q4 2027','Q2 2028','Q4 2028','Q4 2029','Q4 2030'],datasets:[{label:'Base Case (NDX)',data:[24068,25575,27500,28944,34615,38243,35766,38000,40384,54871,57902],borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#3b82f6'},{label:'Bear Case',data:[24068,21000,19500,18500,20000,22000,24000,26000,28000,32000,36000],borderColor:'#f87171',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,4],fill:false,tension:.3,pointRadius:2,pointBackgroundColor:'#f87171'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc,font:{size:10},boxWidth:10,boxHeight:2}}},scales:{x:{ticks:{color:tc,font:{size:9},maxRotation:30},grid:{color:'transparent'}},y:{ticks:{color:tc,font:{size:10},callback:v=>(v/1000).toFixed(0)+'K'},grid:{color:gc}}}}});
 }
+
+// --- FINAL & FIXED SUBTITLE TRANSLATOR LOGIC ---
+const sub_Input = document.getElementById('fileInput');
+const sub_NameDisplay = document.getElementById('fileName');
+
+if(sub_Input) {
+    sub_Input.addEventListener('change', function() {
+        if(this.files[0]) {
+            sub_NameDisplay.innerText = "Selected: " + this.files[0].name;
+            sub_NameDisplay.style.color = "var(--accent)";
+        }
+    });
+}
+
+// --- UNLIMITED GOOGLE TRANSLATE ENGINE (NO LIMITS) ---
+// --- GEMINI AI TRANSLATION ENGINE ---
+async function processSubtitle() {
+    const GEMINI_API_KEY = "AIzaSyDjZkNTBW8SN-5cRUHx-YEmAmCQHXxQHas"; // Get from AI Studio
+    const fIn = document.getElementById('fileInput');
+    const status = document.getElementById('status');
+    const pBar = document.getElementById('prog-bar');
+    const btn = document.getElementById('transBtn');
+
+    if (!fIn.files.length) {
+        alert("සබක් තෝරන්න පතුම්! 🎬");
+        return;
+    }
+
+    const srtFile = fIn.files[0];
+    const reader = new FileReader();
+    btn.disabled = true;
+    status.innerText = "Gemini AI Engine Initializing... 🧠";
+
+    reader.onload = async function(e) {
+        const lines = e.target.result.split(/\r?\n/);
+        let translatedLines = [...lines];
+
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim();
+
+            if (line !== "" && !/^\d+$/.test(line) && !line.includes('-->') && /[a-zA-Z]/.test(line)) {
+                try {
+                    // Gemini API Request
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: `Translate this movie subtitle line to natural Sinhala: "${line}"` }] }]
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (data.candidates && data.candidates[0].content.parts[0].text) {
+                        translatedLines[i] = data.candidates[0].content.parts[0].text.trim();
+                    }
+                    
+                    // Gemini Free Tier එකේ තත්පරයකට requests 15ක් වගේ පුළුවන්. 
+                    // ඒ නිසා පොඩි delay එකක් දාමු.
+                    await new Promise(r => setTimeout(r, 100)); 
+
+                } catch (err) {
+                    console.error("Gemini Error at line " + i);
+                }
+            }
+
+            if (i % 10 === 0) {
+                pBar.style.width = Math.round((i / lines.length) * 100) + "%";
+                status.innerText = `Gemini Translating: ${Math.round((i / lines.length) * 100)}%`;
+            }
+        }
+
+        // Download logic follows...
+        const blob = new Blob([translatedLines.join('\n')], { type: 'text/srt;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = "GEMINI_SI_" + srtFile.name; a.click();
+
+        status.innerText = "Gemini AI වැඩේ ගොඩ දාලා දුන්නා! ✅";
+        btn.disabled = false;
+    };
+    reader.readAsText(srtFile);
+}
+
+function toggleMenu() {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const navLinks = document.getElementById('nav-links');
+    
+    menuBtn.classList.toggle('is-active');
+    navLinks.classList.toggle('active');
+}
+
+// Menu එකේ link එකක් click කරාම menu එක ඉබේම වැහෙන්න (Auto Collapse)
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        document.getElementById('mobile-menu-btn').classList.remove('is-active');
+        document.getElementById('nav-links').classList.remove('active');
+    });
+});
+
 </script>
 </body>
 </html>
